@@ -40,6 +40,7 @@ export class VentaDto {
   montoTotal: number;
   montoTotalMoneda?: number;
   activo?: boolean;
+  paciente: string;
   facturada: boolean;
   fechaEmision?: string | Date;
   montoGiftCard?: number;
