@@ -19,7 +19,9 @@ export interface AppConfig {
     cantidad: number;
     productoMin: number;
     productoMax: number;
-    clienteId: number;
+    clienteId?: number;
+    clienteIdMin?: number;
+    clienteIdMax?: number;
     sucursalId: number;
     puntoVentaId: number;
     codActEcon: number;
@@ -104,7 +106,6 @@ export function loadConfig(): AppConfig {
     cantidad: parseNumber('VENTAS_CANTIDAD')!,
     productoMin: parseNumber('VENTA_PRODUCTO_MIN')!,
     productoMax: parseNumber('VENTA_PRODUCTO_MAX')!,
-    clienteId: parseNumber('CLIENTE_ID')!,
     sucursalId: parseNumber('SUCURSAL_ID')!,
     puntoVentaId: parseNumber('PUNTO_VENTA_ID')!,
     codActEcon: parseNumber('COD_ACT_ECON')!,
@@ -112,6 +113,16 @@ export function loadConfig(): AppConfig {
     codMoneda: parseNumber('COD_MONEDA')!,
     pacienteNombre: parseString('PACIENTE_NOMBRE', false),
   };
+
+  const cidMin = parseNumber('CLIENTE_ID_MIN', false);
+  const cidMax = parseNumber('CLIENTE_ID_MAX', false);
+  if (cidMin !== undefined && cidMax !== undefined) {
+    if (cidMin > cidMax) throw new Error('CLIENTE_ID_MIN no puede ser mayor que CLIENTE_ID_MAX');
+    ventas.clienteIdMin = cidMin;
+    ventas.clienteIdMax = cidMax;
+  } else {
+    ventas.clienteId = parseNumber('CLIENTE_ID')!;
+  }
 
   if (ventas.tipo === 'hospital') {
     ventas.medico = {

@@ -25,6 +25,13 @@ function idProductoAleatorio(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function idClienteDesdeConfig(ventas: AppConfig['ventas']): number {
+  if (ventas.clienteIdMin !== undefined && ventas.clienteIdMax !== undefined) {
+    return idProductoAleatorio(ventas.clienteIdMin, ventas.clienteIdMax);
+  }
+  return ventas.clienteId as number;
+}
+
 export async function procesarVentas(
   clienteService: ClienteService,
   cfg: AppConfig
@@ -64,7 +71,7 @@ export async function procesarVentas(
     }
 
     const venta = new VentaDto({
-      clienteId: ventas.clienteId,
+      clienteId: idClienteDesdeConfig(ventas),
       sucursalId: ventas.sucursalId,
       puntoVentaId: ventas.puntoVentaId,
       codigoDocumentoSectorSin,
